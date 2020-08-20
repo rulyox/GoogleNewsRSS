@@ -1,15 +1,18 @@
-package com.rulyox.googlenewsrss
+package com.rulyox.googlenewsrss.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.rulyox.googlenewsrss.R
 import com.rulyox.googlenewsrss.adapter.ArticleAdapter
 import com.rulyox.googlenewsrss.data.Article
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity: AppCompatActivity() {
+class MainActivity: AppCompatActivity(), MainContract.View {
 
+    private val presenter = MainPresenter()
     private val articleAdapter = ArticleAdapter()
+    private var articleList: ArrayList<Article>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +21,9 @@ class MainActivity: AppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
         initUI()
+        initPresenter()
+
+        presenter.loadList()
 
     }
 
@@ -26,13 +32,28 @@ class MainActivity: AppCompatActivity() {
         main_recycler.layoutManager = LinearLayoutManager(this)
         main_recycler.adapter = articleAdapter
 
-        val articleList = ArrayList<Article>()
-        articleList.add(Article("test 1", "", "description 1", null))
-        articleList.add(Article("test 2", "", "description 2", null))
-        articleList.add(Article("test 3", "", "description 3", null))
+    }
 
-        articleAdapter.setList(articleList)
-        articleAdapter.notifyDataSetChanged()
+    private fun initPresenter() {
+
+        presenter.setView(this)
+
+    }
+
+    override fun setList(articleList: ArrayList<Article>) {
+
+        this.articleList = articleList
+
+    }
+
+    override fun updateView() {
+
+        articleList?.let {
+
+            articleAdapter.setList(it)
+            articleAdapter.notifyDataSetChanged()
+
+        }
 
     }
 
