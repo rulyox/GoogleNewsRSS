@@ -6,9 +6,13 @@ interface MainContract {
 
     interface View {
 
-        fun setList(articleList: ArrayList<Article>)
+        fun setList(articleList: List<Article>)
 
         fun updateView()
+
+        fun showLoading()
+
+        fun hideLoading()
 
     }
 

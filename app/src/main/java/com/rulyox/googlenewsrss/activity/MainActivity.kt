@@ -1,6 +1,7 @@
 package com.rulyox.googlenewsrss.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rulyox.googlenewsrss.R
@@ -12,7 +13,7 @@ class MainActivity: AppCompatActivity(), MainContract.View {
 
     private val presenter = MainPresenter()
     private val articleAdapter = ArticleAdapter()
-    private var articleList: ArrayList<Article>? = null
+    private var articleList: List<Article>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ class MainActivity: AppCompatActivity(), MainContract.View {
 
     }
 
-    override fun setList(articleList: ArrayList<Article>) {
+    override fun setList(articleList: List<Article>) {
 
         this.articleList = articleList
 
@@ -48,10 +49,30 @@ class MainActivity: AppCompatActivity(), MainContract.View {
 
     override fun updateView() {
 
-        articleList?.let {
+        runOnUiThread {
 
-            articleAdapter.setList(it)
-            articleAdapter.notifyDataSetChanged()
+            articleList?.let {
+
+                articleAdapter.setList(it)
+                articleAdapter.notifyDataSetChanged()
+
+            }
+
+        }
+
+    }
+
+    override fun showLoading() {
+
+        main_loading.visibility = View.VISIBLE
+
+    }
+
+    override fun hideLoading() {
+
+        runOnUiThread {
+
+            main_loading.visibility = View.GONE
 
         }
 
