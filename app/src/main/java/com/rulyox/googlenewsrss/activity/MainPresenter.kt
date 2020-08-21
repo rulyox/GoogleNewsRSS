@@ -38,11 +38,12 @@ class MainPresenter: MainContract.Presenter {
 
                         it.setList(loadedArticleList)
                         it.updateView()
-                        it.hideLoading()
 
                     }
 
                 }
+
+                view?.hideLoading()
 
             } catch (e: Exception) { e.printStackTrace() }
 

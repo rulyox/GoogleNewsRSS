@@ -14,6 +14,7 @@ class MainActivity: AppCompatActivity(), MainContract.View {
     private val presenter = MainPresenter()
     private val articleAdapter = ArticleAdapter(this)
     private var articleList: List<Article>? = null
+    private var isLoading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,14 +31,36 @@ class MainActivity: AppCompatActivity(), MainContract.View {
 
     private fun initUI() {
 
+        // recycler
         main_recycler.layoutManager = LinearLayoutManager(this)
         main_recycler.adapter = articleAdapter
+
+        // swipe refresh
+        main_swipe.setOnRefreshListener {
+
+            if(!isLoading) {
+                clearList()
+                presenter.loadList()
+
+            }
+
+            main_swipe.isRefreshing = false
+
+        }
 
     }
 
     private fun initPresenter() {
 
         presenter.setView(this)
+
+    }
+
+    private fun clearList() {
+
+        articleList = listOf()
+        articleAdapter.setList(articleList!!)
+        articleAdapter.notifyDataSetChanged()
 
     }
 
@@ -64,6 +87,7 @@ class MainActivity: AppCompatActivity(), MainContract.View {
 
     override fun showLoading() {
 
+        isLoading = true
         main_loading.visibility = View.VISIBLE
 
     }
@@ -72,6 +96,7 @@ class MainActivity: AppCompatActivity(), MainContract.View {
 
         runOnUiThread {
 
+            isLoading = false
             main_loading.visibility = View.GONE
 
         }
