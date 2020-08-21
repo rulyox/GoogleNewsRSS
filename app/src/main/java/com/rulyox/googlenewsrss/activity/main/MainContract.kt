@@ -1,4 +1,4 @@
-package com.rulyox.googlenewsrss.activity
+package com.rulyox.googlenewsrss.activity.main
 
 import com.rulyox.googlenewsrss.data.Article
 

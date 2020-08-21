@@ -12,7 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.rulyox.googlenewsrss.R
 import com.rulyox.googlenewsrss.data.Article
 
-class ArticleAdapter(private val context: Context): RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder?>() {
+class ArticleAdapter(private val context: Context, private val clickListener: ItemClickListener): RecyclerView.Adapter<ArticleAdapter.ArticleViewHolder?>() {
+
+    interface ItemClickListener {
+
+        fun onItemClick(position: Int)
+
+    }
 
     private var articleList: List<Article>? = null
 
@@ -22,11 +28,21 @@ class ArticleAdapter(private val context: Context): RecyclerView.Adapter<Article
 
     }
 
-    class ArticleViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    class ArticleViewHolder(view: View, adapter: ArticleAdapter): RecyclerView.ViewHolder(view) {
 
         val title: TextView = view.findViewById(R.id.item_article_title)
         val description: TextView = view.findViewById(R.id.item_article_description)
         val image: ImageView = view.findViewById(R.id.item_article_image)
+
+        init {
+
+            view.setOnClickListener {
+
+                adapter.clickListener.onItemClick(position)
+
+            }
+
+        }
 
     }
 
@@ -34,7 +50,7 @@ class ArticleAdapter(private val context: Context): RecyclerView.Adapter<Article
 
         val view: View = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_article, viewGroup, false)
 
-        return ArticleViewHolder(view)
+        return ArticleViewHolder(view, this)
 
     }
 

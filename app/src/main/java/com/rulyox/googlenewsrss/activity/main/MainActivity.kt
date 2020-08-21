@@ -1,10 +1,12 @@
-package com.rulyox.googlenewsrss.activity
+package com.rulyox.googlenewsrss.activity.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.rulyox.googlenewsrss.R
+import com.rulyox.googlenewsrss.activity.read.ReadActivity
 import com.rulyox.googlenewsrss.adapter.ArticleAdapter
 import com.rulyox.googlenewsrss.data.Article
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity: AppCompatActivity(), MainContract.View {
 
     private val presenter = MainPresenter()
-    private val articleAdapter = ArticleAdapter(this)
+    private lateinit var articleAdapter: ArticleAdapter
     private var articleList: List<Article>? = null
     private var isLoading = false
 
@@ -30,6 +32,27 @@ class MainActivity: AppCompatActivity(), MainContract.View {
     }
 
     private fun initUI() {
+
+        // adapter
+        val clickListener = object: ArticleAdapter.ItemClickListener {
+
+            override fun onItemClick(position: Int) {
+
+                articleList?.let {
+
+                    val article = it[position]
+
+                    val readIntent = Intent(this@MainActivity, ReadActivity::class.java)
+                    readIntent.putExtra("title", article.title)
+                    readIntent.putExtra("link", article.link)
+                    startActivity(readIntent)
+
+                }
+
+            }
+
+        }
+        articleAdapter = ArticleAdapter(this, clickListener)
 
         // recycler
         main_recycler.layoutManager = LinearLayoutManager(this)
