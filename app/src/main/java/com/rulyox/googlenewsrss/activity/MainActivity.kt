@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity: AppCompatActivity(), MainContract.View {
 
     private val presenter = MainPresenter()
-    private val articleAdapter = ArticleAdapter()
+    private val articleAdapter = ArticleAdapter(this)
     private var articleList: List<Article>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
