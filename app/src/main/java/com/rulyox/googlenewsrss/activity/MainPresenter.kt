@@ -1,6 +1,7 @@
 package com.rulyox.googlenewsrss.activity
 
 import com.rulyox.googlenewsrss.data.Article
+import com.rulyox.googlenewsrss.parser.ArticleParser
 import com.rulyox.googlenewsrss.parser.RSSParser
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -26,12 +27,20 @@ class MainPresenter: MainContract.Presenter {
             try {
 
                 val articleList: List<Article> = RSSParser.parse(url)
+                val loadedArticleList = mutableListOf<Article>()
 
-                view?.let {
+                for(article in articleList) {
 
-                    it.setList(articleList)
-                    it.updateView()
-                    it.hideLoading()
+                    ArticleParser.parse(article)
+                    loadedArticleList.add(article)
+
+                    view?.let {
+
+                        it.setList(loadedArticleList)
+                        it.updateView()
+                        it.hideLoading()
+
+                    }
 
                 }
 
